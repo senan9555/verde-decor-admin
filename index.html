@@ -2,1472 +2,714 @@
 <html lang="az">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VERDE DECOR — Admin</title>
 
-<title>VERDE DECOR Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
+*{box-sizing:border-box}
 body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f3f5f1;
-    color:#24352b;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f6f2;
+  color:#17251b
 }
-
-button,
-input,
-select,
-textarea{
-    font-family:inherit;
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px
 }
-
-.hidden{
-    display:none !important;
-}
-
-/* LOGIN */
-
-.login-screen{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-
-    background:
-    linear-gradient(rgba(31,48,37,.75),rgba(31,48,37,.75)),
-    url("https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=1600&q=80")
-    center/cover;
-}
-
 .login-box{
-    width:100%;
-    max-width:420px;
-    background:white;
-    padding:35px;
-    border-radius:25px;
-    box-shadow:0 20px 60px rgba(0,0,0,.25);
+  width:100%;
+  max-width:400px;
+  background:white;
+  padding:28px;
+  border-radius:20px;
+  box-shadow:0 10px 35px #0001
 }
-
-.login-logo{
-    text-align:center;
-    color:#315b3d;
-    font-size:26px;
-    font-weight:800;
-    letter-spacing:2px;
-    margin-bottom:8px;
+.logo{
+  font-size:25px;
+  font-weight:800;
+  color:#285b35;
+  margin-bottom:8px
 }
-
-.login-subtitle{
-    text-align:center;
-    color:#778078;
-    margin-bottom:28px;
+.muted{color:#718076}
+label{
+  display:block;
+  font-weight:700;
+  margin:16px 0 7px
 }
-
-.form-group{
-    margin-bottom:17px;
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid #d5ddd7;
+  border-radius:11px;
+  outline:none;
+  background:white
 }
-
-.form-group label{
-    display:block;
-    font-weight:700;
-    margin-bottom:7px;
+textarea{min-height:100px;resize:vertical}
+input:focus,select:focus,textarea:focus{
+  border-color:#4d8658
 }
-
-.form-group input,
-.form-group select,
-.form-group textarea{
-    width:100%;
-    padding:13px;
-    border:1px solid #d6ddd5;
-    border-radius:12px;
-    outline:none;
-    font-size:15px;
+.btn{
+  border:0;
+  border-radius:11px;
+  padding:13px 17px;
+  background:#285b35;
+  color:white;
+  font-weight:700
 }
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{
-    border-color:#315b3d;
+.btn.secondary{
+  background:#e9eee9;
+  color:#285b35
 }
-
-.login-btn,
-.primary-btn{
-    width:100%;
-    border:0;
-    background:#315b3d;
-    color:white;
-    padding:14px;
-    border-radius:12px;
-    font-weight:800;
-    cursor:pointer;
-    font-size:15px;
+.btn.danger{
+  background:#b83c3c
 }
-
+.full{width:100%;margin-top:18px}
 .error{
-    color:#b33b3b;
-    background:#fff0f0;
-    padding:10px;
-    border-radius:10px;
-    margin-bottom:15px;
-    text-align:center;
-    font-size:14px;
+  color:#b42318;
+  background:#fff0ef;
+  padding:10px;
+  border-radius:9px;
+  margin-top:12px;
+  display:none
 }
-
-/* ADMIN */
-
-.admin{
-    min-height:100vh;
+.app{display:none;min-height:100vh}
+header{
+  background:#183b23;
+  color:white;
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px
 }
-
-.topbar{
-    height:70px;
-    background:white;
-    border-bottom:1px solid #e2e6e0;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 25px;
-    position:sticky;
-    top:0;
-    z-index:100;
-}
-
-.admin-logo{
-    font-weight:800;
-    color:#315b3d;
-    letter-spacing:1px;
-}
-
+header strong{font-size:19px}
 .logout{
-    border:0;
-    background:#f0f3ef;
-    color:#315b3d;
-    padding:9px 15px;
-    border-radius:20px;
-    cursor:pointer;
-    font-weight:700;
+  background:#ffffff18;
+  border:1px solid #ffffff40;
+  color:white;
+  padding:9px 13px;
+  border-radius:9px
 }
-
-.layout{
-    display:flex;
-    min-height:calc(100vh - 70px);
+main{
+  max-width:1000px;
+  margin:auto;
+  padding:20px
 }
-
-.sidebar{
-    width:230px;
-    background:#1f3025;
-    padding:20px 12px;
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  margin-bottom:20px
 }
-
-.nav-btn{
-    width:100%;
-    border:0;
-    background:transparent;
-    color:#dce6de;
-    text-align:left;
-    padding:13px 15px;
-    border-radius:10px;
-    cursor:pointer;
-    margin-bottom:5px;
-    font-size:15px;
+.tab{
+  border:0;
+  padding:11px 15px;
+  border-radius:10px;
+  background:#e4ebe5;
+  color:#284a31;
+  white-space:nowrap
 }
-
-.nav-btn:hover,
-.nav-btn.active{
-    background:#315b3d;
-    color:white;
+.tab.active{
+  background:#285b35;
+  color:white
 }
-
-.content{
-    flex:1;
-    padding:30px;
-    max-width:1200px;
+.panel{
+  background:white;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 5px 20px #00000008;
+  margin-bottom:20px
 }
-
-.page{
-    display:none;
+.panel h2{margin-top:0}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px
 }
-
-.page.active{
-    display:block;
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:15px
 }
-
-.page-title{
-    margin-bottom:25px;
+.card{
+  border:1px solid #e0e6e1;
+  border-radius:14px;
+  overflow:hidden;
+  background:white
 }
-
-.page-title h1{
-    font-size:30px;
-    margin-bottom:5px;
+.card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  display:block
 }
-
-.page-title p{
-    color:#737d76;
+.card-body{padding:13px}
+.card h3{margin:0 0 6px}
+.price{font-weight:800;color:#285b35}
+.actions{
+  display:flex;
+  gap:7px;
+  margin-top:12px
 }
-
-/* DASHBOARD */
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
-    margin-bottom:30px;
+.actions button{
+  flex:1;
+  border:0;
+  border-radius:8px;
+  padding:9px
 }
-
-.stat{
-    background:white;
-    border-radius:18px;
-    padding:25px;
-    box-shadow:0 5px 20px rgba(0,0,0,.05);
-}
-
-.stat-icon{
-    font-size:28px;
-    margin-bottom:10px;
-}
-
-.stat-number{
-    font-size:30px;
-    font-weight:800;
-}
-
-.stat-label{
-    color:#788078;
-}
-
-/* PRODUCTS */
-
-.toolbar{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.add-btn{
-    border:0;
-    background:#315b3d;
-    color:white;
-    padding:12px 18px;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:800;
-}
-
-.products-list{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
-}
-
-.product-card{
-    background:white;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 5px 20px rgba(0,0,0,.05);
-}
-
-.product-card img{
-    width:100%;
-    height:190px;
-    object-fit:cover;
-}
-
-.product-info{
-    padding:17px;
-}
-
-.product-info h3{
-    margin-bottom:5px;
-}
-
-.product-category{
-    color:#6f796f;
-    font-size:13px;
-    margin-bottom:10px;
-}
-
-.product-price{
-    font-weight:800;
-    color:#315b3d;
-    margin-bottom:15px;
-}
-
-.card-actions{
-    display:flex;
-    gap:8px;
-}
-
-.edit-btn,
-.delete-btn{
-    flex:1;
-    padding:10px;
-    border:0;
-    border-radius:9px;
-    cursor:pointer;
-    font-weight:700;
-}
-
-.edit-btn{
-    background:#edf2ed;
-    color:#315b3d;
-}
-
-.delete-btn{
-    background:#fff0f0;
-    color:#b33b3b;
-}
-
-/* MODAL */
-
-.modal-bg{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    z-index:1000;
-}
-
-.modal-bg.show{
-    display:flex;
-}
-
-.modal{
-    background:white;
-    width:100%;
-    max-width:600px;
-    max-height:90vh;
-    overflow:auto;
-    border-radius:22px;
-    padding:25px;
-}
-
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
-
-.close{
-    border:0;
-    background:#f0f2ef;
-    width:35px;
-    height:35px;
-    border-radius:50%;
-    cursor:pointer;
-    font-size:20px;
-}
-
-.image-preview{
-    width:100%;
-    height:200px;
-    border-radius:15px;
-    object-fit:cover;
-    background:#f0f2ef;
-    margin-bottom:10px;
-    display:none;
-}
-
-.modal-actions{
-    display:flex;
-    gap:10px;
-    margin-top:20px;
-}
-
-.modal-actions button{
-    flex:1;
-    padding:13px;
-    border-radius:11px;
-    border:0;
-    cursor:pointer;
-    font-weight:800;
-}
-
-.cancel-btn{
-    background:#edf0ec;
-    color:#315b3d;
-}
-
-.save-btn{
-    background:#315b3d;
-    color:white;
-}
-
-/* OTHER */
-
 .empty{
-    background:white;
-    border-radius:18px;
-    padding:45px;
-    text-align:center;
-    color:#788078;
+  padding:25px;
+  text-align:center;
+  color:#718076
 }
-
-.settings-box{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    max-width:650px;
+.preview{
+  margin-top:12px;
+  max-width:180px;
+  max-height:180px;
+  border-radius:12px;
+  object-fit:cover;
+  display:none
 }
-
-@media(max-width:800px){
-
-    .layout{
-        display:block;
-    }
-
-    .sidebar{
-        width:100%;
-        display:flex;
-        overflow-x:auto;
-        padding:10px;
-    }
-
-    .nav-btn{
-        min-width:max-content;
-        margin-right:5px;
-        margin-bottom:0;
-    }
-
-    .content{
-        padding:20px 15px;
-    }
-
-    .stats{
-        grid-template-columns:1fr;
-    }
-
-    .products-list{
-        grid-template-columns:1fr;
-    }
-
-    .toolbar{
-        flex-direction:column;
-    }
-
-    .add-btn{
-        width:100%;
-    }
-
-    .topbar{
-        padding:0 15px;
-    }
-
+.status{
+  padding:10px;
+  border-radius:9px;
+  margin-top:12px;
+  display:none
 }
-
+.status.ok{
+  background:#eaf6ec;
+  color:#236332
+}
+.status.bad{
+  background:#fff0ef;
+  color:#9d2828
+}
+@media(max-width:700px){
+  .grid,.product-grid{grid-template-columns:1fr}
+  main{padding:13px}
+  .panel{padding:15px}
+}
 </style>
 </head>
 
 <body>
 
-
 <!-- LOGIN -->
+<section class="login" id="loginScreen">
+  <div class="login-box">
+    <div class="logo">🌿 VERDE DECOR</div>
+    <p class="muted">Admin panel</p>
 
-<div class="login-screen" id="loginScreen">
+    <label>Email</label>
+    <input id="email" type="email" placeholder="admin@email.com">
 
-    <div class="login-box">
+    <label>Password</label>
+    <input id="password" type="password" placeholder="Şifrə">
 
-        <div class="login-logo">
-            🌿 VERDE DECOR
-        </div>
+    <button class="btn full" id="loginBtn">Daxil ol</button>
 
-        <div class="login-subtitle">
-            Admin Panel
-        </div>
+    <div class="error" id="loginError"></div>
+  </div>
+</section>
 
-        <div id="loginError" class="error hidden">
-            İstifadəçi adı və ya şifrə yanlışdır.
-        </div>
+<!-- APP -->
+<section class="app" id="app">
+  <header>
+    <strong>🌿 VERDE DECOR Admin</strong>
+    <button class="logout" id="logoutBtn">Çıxış</button>
+  </header>
 
-        <div class="form-group">
+  <main>
 
-            <label>
-                İstifadəçi adı
-            </label>
-
-            <input
-                id="username"
-                type="text"
-                placeholder="admin"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                Şifrə
-            </label>
-
-            <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-            >
-
-        </div>
-
-        <button class="login-btn" onclick="login()">
-            DAXİL OL
-        </button>
-
+    <div class="tabs">
+      <button class="tab active" data-page="productsPage">Məhsullar</button>
+      <button class="tab" data-page="addPage">Məhsul əlavə et</button>
     </div>
 
-</div>
-
-
-<!-- ADMIN -->
-
-<div class="admin hidden" id="adminPanel">
-
-    <div class="topbar">
-
-        <div class="admin-logo">
-            🌿 VERDE DECOR ADMIN
+    <!-- PRODUCTS -->
+    <section id="productsPage">
+      <div class="panel">
+        <h2>Məhsullar</h2>
+        <div id="productsList" class="product-grid">
+          <div class="empty">Yüklənir...</div>
         </div>
+      </div>
+    </section>
 
-        <button class="logout" onclick="logout()">
-            Çıxış
-        </button>
+    <!-- ADD / EDIT -->
+    <section id="addPage" style="display:none">
+      <div class="panel">
+        <h2 id="formTitle">Yeni məhsul</h2>
 
-    </div>
+        <form id="productForm">
 
+          <label>Məhsul adı</label>
+          <input id="productName" required placeholder="Məsələn: Zeytun ağacı">
 
-    <div class="layout">
+          <label>Kateqoriya</label>
+          <select id="productCategory" required>
+            <option value="tree">Süni ağaclar</option>
+            <option value="flower">Güllər / Kompozisiya</option>
+            <option value="wall">Yaşıl divar</option>
+            <option value="pot">Dibçək</option>
+          </select>
 
-        <aside class="sidebar">
+          <label>Qiymət</label>
+          <input id="productPrice" type="number" min="0" step="0.01" placeholder="0">
 
-            <button
-                class="nav-btn active"
-                onclick="showPage('dashboard',this)">
-                📊 Dashboard
-            </button>
+          <label>Təsvir</label>
+          <textarea id="productDescription" placeholder="Məhsul haqqında qısa məlumat"></textarea>
 
-            <button
-                class="nav-btn"
-                onclick="showPage('products',this)">
-                📦 Məhsullar
-            </button>
+          <label>Şəkil</label>
+          <input id="productImage" type="file" accept="image/*">
 
-            <button
-                class="nav-btn"
-                onclick="showPage('projects',this)">
-                📸 Layihələr
-            </button>
+          <img id="preview" class="preview" alt="Şəkil önizləməsi">
 
-            <button
-                class="nav-btn"
-                onclick="showPage('reviews',this)">
-                ⭐ Rəylər
-            </button>
+          <div class="actions">
+            <button type="submit" class="btn" id="saveBtn">Məhsulu yadda saxla</button>
+            <button type="button" class="btn secondary" id="cancelBtn">Ləğv et</button>
+          </div>
 
-            <button
-                class="nav-btn"
-                onclick="showPage('settings',this)">
-                ⚙️ Ayarlar
-            </button>
+          <div class="status" id="formStatus"></div>
 
-        </aside>
+        </form>
+      </div>
+    </section>
 
-
-        <main class="content">
-
-
-            <!-- DASHBOARD -->
-
-            <div class="page active" id="dashboard">
-
-                <div class="page-title">
-
-                    <h1>Dashboard 👋</h1>
-
-                    <p>
-                        VERDE DECOR idarəetmə panelinə xoş gəldin.
-                    </p>
-
-                </div>
-
-                <div class="stats">
-
-                    <div class="stat">
-
-                        <div class="stat-icon">
-                            📦
-                        </div>
-
-                        <div
-                            class="stat-number"
-                            id="productCount">
-                            0
-                        </div>
-
-                        <div class="stat-label">
-                            Məhsullar
-                        </div>
-
-                    </div>
-
-                    <div class="stat">
-
-                        <div class="stat-icon">
-                            📸
-                        </div>
-
-                        <div class="stat-number">
-                            0
-                        </div>
-
-                        <div class="stat-label">
-                            Layihələr
-                        </div>
-
-                    </div>
-
-                    <div class="stat">
-
-                        <div class="stat-icon">
-                            ⭐
-                        </div>
-
-                        <div class="stat-number">
-                            0
-                        </div>
-
-                        <div class="stat-label">
-                            Rəylər
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- PRODUCTS -->
-
-            <div class="page" id="products">
-
-                <div class="page-title">
-
-                    <h1>Məhsullar</h1>
-
-                    <p>
-                        Məhsul kataloqunu buradan idarə et.
-                    </p>
-
-                </div>
-
-                <div class="toolbar">
-
-                    <div></div>
-
-                    <button
-                        class="add-btn"
-                        onclick="openProductModal()">
-                        ➕ Yeni məhsul
-                    </button>
-
-                </div>
-
-                <div
-                    class="products-list"
-                    id="productsList">
-                </div>
-
-            </div>
-
-
-            <!-- PROJECTS -->
-
-            <div class="page" id="projects">
-
-                <div class="page-title">
-
-                    <h1>Layihələr</h1>
-
-                    <p>
-                        Real layihə şəkillərini burada idarə edəcəyik.
-                    </p>
-
-                </div>
-
-                <div class="empty">
-
-                    📸
-
-                    <br><br>
-
-                    Layihə idarəetməsi növbəti mərhələdə aktivləşdiriləcək.
-
-                </div>
-
-            </div>
-
-
-            <!-- REVIEWS -->
-
-            <div class="page" id="reviews">
-
-                <div class="page-title">
-
-                    <h1>Rəylər</h1>
-
-                    <p>
-                        Müştəri rəyləri.
-                    </p>
-
-                </div>
-
-                <div class="empty">
-
-                    ⭐
-
-                    <br><br>
-
-                    Rəy idarəetməsi növbəti mərhələdə aktivləşdiriləcək.
-
-                </div>
-
-            </div>
-
-
-            <!-- SETTINGS -->
-
-            <div class="page" id="settings">
-
-                <div class="page-title">
-
-                    <h1>Sayt ayarları</h1>
-
-                    <p>
-                        Biznes məlumatlarını idarə et.
-                    </p>
-
-                </div>
-
-                <div class="settings-box">
-
-                    <div class="form-group">
-
-                        <label>
-                            Biznes adı
-                        </label>
-
-                        <input
-                            id="businessName"
-                            value="VERDE DECOR"
-                        >
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            WhatsApp nömrəsi
-                        </label>
-
-                        <input
-                            id="whatsapp"
-                            value="994501234567"
-                        >
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Ünvan
-                        </label>
-
-                        <input
-                            id="address"
-                            value="Bakı, Azərbaycan"
-                        >
-
-                    </div>
-
-                    <button
-                        class="primary-btn"
-                        onclick="saveSettings()">
-                        Ayarları yadda saxla
-                    </button>
-
-                </div>
-
-            </div>
-
-
-        </main>
-
-    </div>
-
-</div>
-
-
-<!-- PRODUCT MODAL -->
-
-<div class="modal-bg" id="productModal">
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <h2 id="modalTitle">
-                Yeni məhsul
-            </h2>
-
-            <button
-                class="close"
-                onclick="closeProductModal()">
-                ×
-            </button>
-
-        </div>
-
-        <input
-            type="hidden"
-            id="editId"
-        >
-
-        <div class="form-group">
-
-            <label>
-                Məhsul şəkli
-            </label>
-
-            <input
-                id="productImage"
-                type="file"
-                accept="image/*"
-                onchange="previewImage(event)"
-            >
-
-        </div>
-
-        <img
-            id="imagePreview"
-            class="image-preview"
-        >
-
-        <div class="form-group">
-
-            <label>
-                Məhsul adı
-            </label>
-
-            <input
-                id="productName"
-                placeholder="Məsələn: Zeytun ağacı"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                Kateqoriya
-            </label>
-
-            <select id="productCategory">
-
-                <option value="tree">
-                    Süni ağac
-                </option>
-
-                <option value="flower">
-                    Gül
-                </option>
-
-                <option value="wall">
-                    Yaşıl divar
-                </option>
-
-                <option value="pot">
-                    Dibçək
-                </option>
-
-            </select>
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                Qiymət
-            </label>
-
-            <input
-                id="productPrice"
-                placeholder="Məsələn: 120 AZN"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                Təsvir
-            </label>
-
-            <textarea
-                id="productDescription"
-                placeholder="Məhsul haqqında qısa məlumat..."
-            ></textarea>
-
-        </div>
-
-        <div class="modal-actions">
-
-            <button
-                class="cancel-btn"
-                onclick="closeProductModal()">
-                Ləğv et
-            </button>
-
-            <button
-                class="save-btn"
-                onclick="saveProduct()">
-                Yadda saxla
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
+  </main>
+</section>
 
 <script>
+/* =====================================================
+   SUPABASE AYARLARI
+   BURADA YALNIZ 2 YERİ DƏYİŞ:
+   1. SUPABASE_URL
+   2. SUPABASE_KEY
+   ===================================================== */
 
-let products =
-    JSON.parse(
-        localStorage.getItem("verdeProducts")
-    ) || [];
+const SUPABASE_URL = "https://yxhiqqcninhgwcwgpaen.supabase.co/rest/v1/";
+const SUPABASE_KEY = "sb_publishable_BovYZI2LdinlHZMOAylVqg_lMXAa9tQ ";
 
-let imageData = "";
+const client = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
+let editingId = null;
+let oldImageUrl = "";
 
-/* LOGIN */
+const loginScreen = document.getElementById("loginScreen");
+const app = document.getElementById("app");
+const loginError = document.getElementById("loginError");
+const productsList = document.getElementById("productsList");
 
-function login(){
+const productForm = document.getElementById("productForm");
+const productName = document.getElementById("productName");
+const productCategory = document.getElementById("productCategory");
+const productPrice = document.getElementById("productPrice");
+const productDescription = document.getElementById("productDescription");
+const productImage = document.getElementById("productImage");
+const preview = document.getElementById("preview");
+const formStatus = document.getElementById("formStatus");
+const formTitle = document.getElementById("formTitle");
 
-    const username =
-        document.getElementById("username").value.trim();
+function showStatus(message, good=true){
+  formStatus.textContent = message;
+  formStatus.className = "status " + (good ? "ok" : "bad");
+  formStatus.style.display = "block";
+}
 
-    const password =
-        document.getElementById("password").value;
+function clearStatus(){
+  formStatus.style.display = "none";
+}
 
-    /*
-        DEMO LOGIN
+function showApp(){
+  loginScreen.style.display = "none";
+  app.style.display = "block";
+  loadProducts();
+}
 
-        Sonrakı mərhələdə real
-        təhlükəsiz authentication
-        sistemi ilə dəyişdiriləcək.
-    */
+function showLogin(){
+  app.style.display = "none";
+  loginScreen.style.display = "flex";
+}
 
-    if(
-        username === "admin" &&
-        password === "1234"
-    ){
+async function checkSession(){
+  const {data} = await client.auth.getSession();
 
-        localStorage.setItem(
-            "verdeLoggedIn",
-            "true"
-        );
+  if(data.session){
+    showApp();
+  }else{
+    showLogin();
+  }
+}
 
-        showAdmin();
+document.getElementById("loginBtn").addEventListener("click", async ()=>{
+  loginError.style.display = "none";
 
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if(!email || !password){
+    loginError.textContent = "Email və şifrəni daxil et.";
+    loginError.style.display = "block";
+    return;
+  }
+
+  const {error} = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    loginError.textContent = error.message;
+    loginError.style.display = "block";
+    return;
+  }
+
+  showApp();
+});
+
+document.getElementById("logoutBtn").addEventListener("click", async ()=>{
+  await client.auth.signOut();
+  showLogin();
+});
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    tab.classList.add("active");
+
+    document.getElementById("productsPage").style.display =
+      tab.dataset.page === "productsPage" ? "block" : "none";
+
+    document.getElementById("addPage").style.display =
+      tab.dataset.page === "addPage" ? "block" : "none";
+
+    if(tab.dataset.page === "addPage"){
+      clearStatus();
     }
-    else{
+  });
+});
 
-        document
-            .getElementById("loginError")
-            .classList.remove("hidden");
+productImage.addEventListener("change", ()=>{
+  const file = productImage.files[0];
 
-    }
+  if(!file){
+    preview.style.display = "none";
+    return;
+  }
 
+  const reader = new FileReader();
+
+  reader.onload = e=>{
+    preview.src = e.target.result;
+    preview.style.display = "block";
+  };
+
+  reader.readAsDataURL(file);
+});
+
+async function loadProducts(){
+
+  productsList.innerHTML =
+    '<div class="empty">Məhsullar yüklənir...</div>';
+
+  const {data, error} = await client
+    .from("products")
+    .select("*")
+    .order("created_at", {ascending:false});
+
+  if(error){
+    productsList.innerHTML =
+      '<div class="empty">Xəta: ' +
+      escapeHtml(error.message) +
+      '</div>';
+    return;
+  }
+
+  if(!data || data.length === 0){
+    productsList.innerHTML =
+      '<div class="empty">Hələ məhsul yoxdur.</div>';
+    return;
+  }
+
+  productsList.innerHTML = data.map(product=>{
+
+    const image = product.image_url
+      ? `<img src="${escapeAttr(product.image_url)}" alt="${escapeAttr(product.name)}">`
+      : `<div style="height:180px;display:flex;align-items:center;justify-content:center;background:#edf1ed;font-size:50px">🌿</div>`;
+
+    return `
+      <article class="card">
+        ${image}
+
+        <div class="card-body">
+          <h3>${escapeHtml(product.name)}</h3>
+
+          <div class="muted">
+            ${escapeHtml(categoryName(product.category))}
+          </div>
+
+          <p class="price">
+            ${Number(product.price || 0).toFixed(2)} AZN
+          </p>
+
+          <p>
+            ${escapeHtml(product.description || "")}
+          </p>
+
+          <div class="actions">
+            <button
+              style="background:#e9eee9;color:#285b35"
+              onclick="editProduct('${product.id}')">
+              Redaktə
+            </button>
+
+            <button
+              style="background:#ffe9e9;color:#a22"
+              onclick="deleteProduct('${product.id}')">
+              Sil
+            </button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
 }
-
-
-function showAdmin(){
-
-    document
-        .getElementById("loginScreen")
-        .classList.add("hidden");
-
-    document
-        .getElementById("adminPanel")
-        .classList.remove("hidden");
-
-    renderProducts();
-
-}
-
-
-function logout(){
-
-    localStorage.removeItem(
-        "verdeLoggedIn"
-    );
-
-    location.reload();
-
-}
-
-
-if(
-    localStorage.getItem("verdeLoggedIn")
-    === "true"
-){
-
-    showAdmin();
-
-}
-
-
-/* NAVIGATION */
-
-function showPage(pageId,button){
-
-    document
-        .querySelectorAll(".page")
-        .forEach(function(page){
-
-            page.classList.remove("active");
-
-        });
-
-    document
-        .getElementById(pageId)
-        .classList.add("active");
-
-    document
-        .querySelectorAll(".nav-btn")
-        .forEach(function(btn){
-
-            btn.classList.remove("active");
-
-        });
-
-    button.classList.add("active");
-
-}
-
-
-/* PRODUCTS */
-
-function renderProducts(){
-
-    const container =
-        document.getElementById("productsList");
-
-    container.innerHTML = "";
-
-    document
-        .getElementById("productCount")
-        .textContent = products.length;
-
-    if(products.length === 0){
-
-        container.innerHTML = `
-            <div class="empty">
-                📦<br><br>
-                Hələ məhsul yoxdur.<br><br>
-                "Yeni məhsul" düyməsinə bas.
-            </div>
-        `;
-
-        return;
-
-    }
-
-    products.forEach(function(product){
-
-        const card =
-            document.createElement("div");
-
-        card.className = "product-card";
-
-        card.innerHTML = `
-
-            <img
-                src="${product.image || 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=900&q=80'}"
-                alt="${product.name}"
-            >
-
-            <div class="product-info">
-
-                <h3>
-                    ${product.name}
-                </h3>
-
-                <div class="product-category">
-                    ${categoryName(product.category)}
-                </div>
-
-                <div class="product-price">
-                    ${product.price || "Qiymət soruş"}
-                </div>
-
-                <div class="card-actions">
-
-                    <button
-                        class="edit-btn"
-                        onclick="editProduct(${product.id})">
-                        ✏️ Redaktə
-                    </button>
-
-                    <button
-                        class="delete-btn"
-                        onclick="deleteProduct(${product.id})">
-                        🗑️ Sil
-                    </button>
-
-                </div>
-
-            </div>
-
-        `;
-
-        container.appendChild(card);
-
-    });
-
-}
-
 
 function categoryName(category){
+  const names = {
+    tree:"Süni ağaclar",
+    flower:"Güllər / Kompozisiya",
+    wall:"Yaşıl divar",
+    pot:"Dibçək"
+  };
 
-    const names = {
+  return names[category] || category;
+}
 
-        tree:"Süni ağac",
+async function uploadImage(file){
 
-        flower:"Gül",
+  if(!file) return oldImageUrl || "";
 
-        wall:"Yaşıl divar",
+  const extension =
+    file.name.split(".").pop().toLowerCase();
 
-        pot:"Dibçək"
+  const safeExtension =
+    ["jpg","jpeg","png","webp","gif"].includes(extension)
+      ? extension
+      : "jpg";
 
+  const fileName =
+    crypto.randomUUID() + "." + safeExtension;
+
+  const path = "products/" + fileName;
+
+  const {error} = await client.storage
+    .from("product-images")
+    .upload(path, file, {
+      cacheControl:"3600",
+      upsert:false
+    });
+
+  if(error){
+    throw new Error("Şəkil yüklənmədi: " + error.message);
+  }
+
+  const {data} = client.storage
+    .from("product-images")
+    .getPublicUrl(path);
+
+  return data.publicUrl;
+}
+
+productForm.addEventListener("submit", async e=>{
+
+  e.preventDefault();
+  clearStatus();
+
+  const saveBtn = document.getElementById("saveBtn");
+
+  saveBtn.disabled = true;
+  saveBtn.textContent = "Yadda saxlanılır...";
+
+  try{
+
+    const file = productImage.files[0];
+
+    const imageUrl = await uploadImage(file);
+
+    const payload = {
+      name: productName.value.trim(),
+      category: productCategory.value,
+      price: Number(productPrice.value || 0),
+      description: productDescription.value.trim(),
+      image_url: imageUrl
     };
 
-    return names[category] || category;
-
-}
-
-
-/* MODAL */
-
-function openProductModal(){
-
-    document
-        .getElementById("modalTitle")
-        .textContent = "Yeni məhsul";
-
-    document
-        .getElementById("editId")
-        .value = "";
-
-    document
-        .getElementById("productName")
-        .value = "";
-
-    document
-        .getElementById("productCategory")
-        .value = "tree";
-
-    document
-        .getElementById("productPrice")
-        .value = "";
-
-    document
-        .getElementById("productDescription")
-        .value = "";
-
-    document
-        .getElementById("productImage")
-        .value = "";
-
-    imageData = "";
-
-    document
-        .getElementById("imagePreview")
-        .style.display = "none";
-
-    document
-        .getElementById("productModal")
-        .classList.add("show");
-
-}
-
-
-function closeProductModal(){
-
-    document
-        .getElementById("productModal")
-        .classList.remove("show");
-
-}
-
-
-/* IMAGE */
-
-function previewImage(event){
-
-    const file =
-        event.target.files[0];
-
-    if(!file){
-        return;
+    if(!payload.name){
+      throw new Error("Məhsul adını yaz.");
     }
 
-    const reader =
-        new FileReader();
+    let result;
 
-    reader.onload = function(e){
+    if(editingId){
 
-        imageData = e.target.result;
+      result = await client
+        .from("products")
+        .update(payload)
+        .eq("id", editingId);
 
-        const preview =
-            document.getElementById("imagePreview");
+    }else{
 
-        preview.src = imageData;
-
-        preview.style.display = "block";
-
-    };
-
-    reader.readAsDataURL(file);
-
-}
-
-
-/* SAVE */
-
-function saveProduct(){
-
-    const name =
-        document
-            .getElementById("productName")
-            .value
-            .trim();
-
-    const category =
-        document
-            .getElementById("productCategory")
-            .value;
-
-    const price =
-        document
-            .getElementById("productPrice")
-            .value
-            .trim();
-
-    const description =
-        document
-            .getElementById("productDescription")
-            .value
-            .trim();
-
-    const editId =
-        document
-            .getElementById("editId")
-            .value;
-
-    if(!name){
-
-        alert("Məhsul adını yaz.");
-
-        return;
+      result = await client
+        .from("products")
+        .insert(payload);
 
     }
 
-
-    if(editId){
-
-        const product =
-            products.find(
-                p => p.id === Number(editId)
-            );
-
-        product.name = name;
-        product.category = category;
-        product.price = price;
-        product.description = description;
-
-        if(imageData){
-            product.image = imageData;
-        }
-
-    }
-    else{
-
-        const newProduct = {
-
-            id:Date.now(),
-
-            name:name,
-
-            category:category,
-
-            price:price,
-
-            description:description,
-
-            image:imageData
-
-        };
-
-        products.push(newProduct);
-
+    if(result.error){
+      throw result.error;
     }
 
-
-    localStorage.setItem(
-        "verdeProducts",
-        JSON.stringify(products)
+    showStatus(
+      editingId
+        ? "Məhsul yeniləndi. ✅"
+        : "Məhsul əlavə edildi. ✅"
     );
 
-    renderProducts();
+    resetForm();
+    await loadProducts();
 
-    closeProductModal();
+  }catch(error){
 
-}
-
-
-function editProduct(id){
-
-    const product =
-        products.find(
-            p => p.id === id
-        );
-
-    if(!product){
-        return;
-    }
-
-    document
-        .getElementById("modalTitle")
-        .textContent = "Məhsulu redaktə et";
-
-    document
-        .getElementById("editId")
-        .value = product.id;
-
-    document
-        .getElementById("productName")
-        .value = product.name;
-
-    document
-        .getElementById("productCategory")
-        .value = product.category;
-
-    document
-        .getElementById("productPrice")
-        .value = product.price;
-
-    document
-        .getElementById("productDescription")
-        .value =
-        product.description || "";
-
-    imageData = product.image || "";
-
-    const preview =
-        document.getElementById("imagePreview");
-
-    if(imageData){
-
-        preview.src = imageData;
-
-        preview.style.display = "block";
-
-    }
-    else{
-
-        preview.style.display = "none";
-
-    }
-
-    document
-        .getElementById("productModal")
-        .classList.add("show");
-
-}
-
-
-function deleteProduct(id){
-
-    const confirmDelete =
-        confirm(
-            "Bu məhsulu silmək istəyirsən?"
-        );
-
-    if(!confirmDelete){
-        return;
-    }
-
-    products =
-        products.filter(
-            p => p.id !== id
-        );
-
-    localStorage.setItem(
-        "verdeProducts",
-        JSON.stringify(products)
+    showStatus(
+      error.message || "Naməlum xəta baş verdi.",
+      false
     );
 
-    renderProducts();
+  }finally{
 
+    saveBtn.disabled = false;
+    saveBtn.textContent = "Məhsulu yadda saxla";
+  }
+});
+
+window.editProduct = async function(id){
+
+  const {data, error} = await client
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  editingId = id;
+  oldImageUrl = data.image_url || "";
+
+  productName.value = data.name || "";
+  productCategory.value = data.category || "tree";
+  productPrice.value = data.price || 0;
+  productDescription.value = data.description || "";
+
+  if(data.image_url){
+    preview.src = data.image_url;
+    preview.style.display = "block";
+  }else{
+    preview.style.display = "none";
+  }
+
+  formTitle.textContent = "Məhsulu redaktə et";
+
+  document.querySelectorAll(".tab").forEach(x=>{
+    x.classList.remove("active");
+  });
+
+  document.querySelector('[data-page="addPage"]')
+    .classList.add("active");
+
+  document.getElementById("productsPage").style.display = "none";
+  document.getElementById("addPage").style.display = "block";
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+};
+
+window.deleteProduct = async function(id){
+
+  const ok = confirm(
+    "Bu məhsulu silmək istədiyinə əminsən?"
+  );
+
+  if(!ok) return;
+
+  const {error} = await client
+    .from("products")
+    .delete()
+    .eq("id", id);
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  await loadProducts();
+};
+
+document.getElementById("cancelBtn")
+  .addEventListener("click", resetForm);
+
+function resetForm(){
+
+  editingId = null;
+  oldImageUrl = "";
+
+  productForm.reset();
+
+  preview.src = "";
+  preview.style.display = "none";
+
+  formTitle.textContent = "Yeni məhsul";
+
+  clearStatus();
 }
 
-
-/* SETTINGS */
-
-function saveSettings(){
-
-    const settings = {
-
-        businessName:
-            document
-                .getElementById("businessName")
-                .value,
-
-        whatsapp:
-            document
-                .getElementById("whatsapp")
-                .value,
-
-        address:
-            document
-                .getElementById("address")
-                .value
-
-    };
-
-    localStorage.setItem(
-        "verdeSettings",
-        JSON.stringify(settings)
-    );
-
-    alert(
-        "Ayarlar yadda saxlanıldı."
-    );
-
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
 
+function escapeAttr(value){
+  return escapeHtml(value);
+}
+
+client.auth.onAuthStateChange((_event, session)=>{
+  if(session){
+    showApp();
+  }
+});
+
+checkSession();
 </script>
 
 </body>
-          </html> 
+</html> 
