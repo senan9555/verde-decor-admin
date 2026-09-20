@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VERDE DECOR Admin</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f3f5f1;
+    color:#24352b;
+}
+
+button,
+input,
+select,
+textarea{
+    font-family:inherit;
+}
+
+.hidden{
+    display:none !important;
+}
+
+/* LOGIN */
+
+.login-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+
+    background:
+    linear-gradient(rgba(31,48,37,.75),rgba(31,48,37,.75)),
+    url("https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=1600&q=80")
+    center/cover;
+}
+
+.login-box{
+    width:100%;
+    max-width:420px;
+    background:white;
+    padding:35px;
+    border-radius:25px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.login-logo{
+    text-align:center;
+    color:#315b3d;
+    font-size:26px;
+    font-weight:800;
+    letter-spacing:2px;
+    margin-bottom:8px;
+}
+
+.login-subtitle{
+    text-align:center;
+    color:#778078;
+    margin-bottom:28px;
+}
+
+.form-group{
+    margin-bottom:17px;
+}
+
+.form-group label{
+    display:block;
+    font-weight:700;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+    padding:13px;
+    border:1px solid #d6ddd5;
+    border-radius:12px;
+    outline:none;
+    font-size:15px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+    border-color:#315b3d;
+}
+
+.login-btn,
+.primary-btn{
+    width:100%;
+    border:0;
+    background:#315b3d;
+    color:white;
+    padding:14px;
+    border-radius:12px;
+    font-weight:800;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.error{
+    color:#b33b3b;
+    background:#fff0f0;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:15px;
+    text-align:center;
+    font-size:14px;
+}
+
+/* ADMIN */
+
+.admin{
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid #e2e6e0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.admin-logo{
+    font-weight:800;
+    color:#315b3d;
+    letter-spacing:1px;
+}
+
+.logout{
+    border:0;
+    background:#f0f3ef;
+    color:#315b3d;
+    padding:9px 15px;
+    border-radius:20px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.layout{
+    display:flex;
+    min-height:calc(100vh - 70px);
+}
+
+.sidebar{
+    width:230px;
+    background:#1f3025;
+    padding:20px 12px;
+}
+
+.nav-btn{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#dce6de;
+    text-align:left;
+    padding:13px 15px;
+    border-radius:10px;
+    cursor:pointer;
+    margin-bottom:5px;
+    font-size:15px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+    background:#315b3d;
+    color:white;
+}
+
+.content{
+    flex:1;
+    padding:30px;
+    max-width:1200px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-title{
+    margin-bottom:25px;
+}
+
+.page-title h1{
+    font-size:30px;
+    margin-bottom:5px;
+}
+
+.page-title p{
+    color:#737d76;
+}
+
+/* DASHBOARD */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-bottom:30px;
+}
+
+.stat{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.stat-icon{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.stat-number{
+    font-size:30px;
+    font-weight:800;
+}
+
+.stat-label{
+    color:#788078;
+}
+
+/* PRODUCTS */
+
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.add-btn{
+    border:0;
+    background:#315b3d;
+    color:white;
+    padding:12px 18px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:800;
+}
+
+.products-list{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.product-card{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.product-card img{
+    width:100%;
+    height:190px;
+    object-fit:cover;
+}
+
+.product-info{
+    padding:17px;
+}
+
+.product-info h3{
+    margin-bottom:5px;
+}
+
+.product-category{
+    color:#6f796f;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.product-price{
+    font-weight:800;
+    color:#315b3d;
+    margin-bottom:15px;
+}
+
+.card-actions{
+    display:flex;
+    gap:8px;
+}
+
+.edit-btn,
+.delete-btn{
+    flex:1;
+    padding:10px;
+    border:0;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.edit-btn{
+    background:#edf2ed;
+    color:#315b3d;
+}
+
+.delete-btn{
+    background:#fff0f0;
+    color:#b33b3b;
+}
+
+/* MODAL */
+
+.modal-bg{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:1000;
+}
+
+.modal-bg.show{
+    display:flex;
+}
+
+.modal{
+    background:white;
+    width:100%;
+    max-width:600px;
+    max-height:90vh;
+    overflow:auto;
+    border-radius:22px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    border:0;
+    background:#f0f2ef;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:20px;
+}
+
+.image-preview{
+    width:100%;
+    height:200px;
+    border-radius:15px;
+    object-fit:cover;
+    background:#f0f2ef;
+    margin-bottom:10px;
+    display:none;
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.modal-actions button{
+    flex:1;
+    padding:13px;
+    border-radius:11px;
+    border:0;
+    cursor:pointer;
+    font-weight:800;
+}
+
+.cancel-btn{
+    background:#edf0ec;
+    color:#315b3d;
+}
+
+.save-btn{
+    background:#315b3d;
+    color:white;
+}
+
+/* OTHER */
+
+.empty{
+    background:white;
+    border-radius:18px;
+    padding:45px;
+    text-align:center;
+    color:#788078;
+}
+
+.settings-box{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    max-width:650px;
+}
+
+@media(max-width:800px){
+
+    .layout{
+        display:block;
+    }
+
+    .sidebar{
+        width:100%;
+        display:flex;
+        overflow-x:auto;
+        padding:10px;
+    }
+
+    .nav-btn{
+        min-width:max-content;
+        margin-right:5px;
+        margin-bottom:0;
+    }
+
+    .content{
+        padding:20px 15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .products-list{
+        grid-template-columns:1fr;
+    }
+
+    .toolbar{
+        flex-direction:column;
+    }
+
+    .add-btn{
+        width:100%;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- LOGIN -->
+
+<div class="login-screen" id="loginScreen">
+
+    <div class="login-box">
+
+        <div class="login-logo">
+            🌿 VERDE DECOR
+        </div>
+
+        <div class="login-subtitle">
+            Admin Panel
+        </div>
+
+        <div id="loginError" class="error hidden">
+            İstifadəçi adı və ya şifrə yanlışdır.
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                İstifadəçi adı
+            </label>
+
+            <input
+                id="username"
+                type="text"
+                placeholder="admin"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Şifrə
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+            >
+
+        </div>
+
+        <button class="login-btn" onclick="login()">
+            DAXİL OL
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ADMIN -->
+
+<div class="admin hidden" id="adminPanel">
+
+    <div class="topbar">
+
+        <div class="admin-logo">
+            🌿 VERDE DECOR ADMIN
+        </div>
+
+        <button class="logout" onclick="logout()">
+            Çıxış
+        </button>
+
+    </div>
+
+
+    <div class="layout">
+
+        <aside class="sidebar">
+
+            <button
+                class="nav-btn active"
+                onclick="showPage('dashboard',this)">
+                📊 Dashboard
+            </button>
+
+            <button
+                class="nav-btn"
+                onclick="showPage('products',this)">
+                📦 Məhsullar
+            </button>
+
+            <button
+                class="nav-btn"
+                onclick="showPage('projects',this)">
+                📸 Layihələr
+            </button>
+
+            <button
+                class="nav-btn"
+                onclick="showPage('reviews',this)">
+                ⭐ Rəylər
+            </button>
+
+            <button
+                class="nav-btn"
+                onclick="showPage('settings',this)">
+                ⚙️ Ayarlar
+            </button>
+
+        </aside>
+
+
+        <main class="content">
+
+
+            <!-- DASHBOARD -->
+
+            <div class="page active" id="dashboard">
+
+                <div class="page-title">
+
+                    <h1>Dashboard 👋</h1>
+
+                    <p>
+                        VERDE DECOR idarəetmə panelinə xoş gəldin.
+                    </p>
+
+                </div>
+
+                <div class="stats">
+
+                    <div class="stat">
+
+                        <div class="stat-icon">
+                            📦
+                        </div>
+
+                        <div
+                            class="stat-number"
+                            id="productCount">
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Məhsullar
+                        </div>
+
+                    </div>
+
+                    <div class="stat">
+
+                        <div class="stat-icon">
+                            📸
+                        </div>
+
+                        <div class="stat-number">
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Layihələr
+                        </div>
+
+                    </div>
+
+                    <div class="stat">
+
+                        <div class="stat-icon">
+                            ⭐
+                        </div>
+
+                        <div class="stat-number">
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Rəylər
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCTS -->
+
+            <div class="page" id="products">
+
+                <div class="page-title">
+
+                    <h1>Məhsullar</h1>
+
+                    <p>
+                        Məhsul kataloqunu buradan idarə et.
+                    </p>
+
+                </div>
+
+                <div class="toolbar">
+
+                    <div></div>
+
+                    <button
+                        class="add-btn"
+                        onclick="openProductModal()">
+                        ➕ Yeni məhsul
+                    </button>
+
+                </div>
+
+                <div
+                    class="products-list"
+                    id="productsList">
+                </div>
+
+            </div>
+
+
+            <!-- PROJECTS -->
+
+            <div class="page" id="projects">
+
+                <div class="page-title">
+
+                    <h1>Layihələr</h1>
+
+                    <p>
+                        Real layihə şəkillərini burada idarə edəcəyik.
+                    </p>
+
+                </div>
+
+                <div class="empty">
+
+                    📸
+
+                    <br><br>
+
+                    Layihə idarəetməsi növbəti mərhələdə aktivləşdiriləcək.
+
+                </div>
+
+            </div>
+
+
+            <!-- REVIEWS -->
+
+            <div class="page" id="reviews">
+
+                <div class="page-title">
+
+                    <h1>Rəylər</h1>
+
+                    <p>
+                        Müştəri rəyləri.
+                    </p>
+
+                </div>
+
+                <div class="empty">
+
+                    ⭐
+
+                    <br><br>
+
+                    Rəy idarəetməsi növbəti mərhələdə aktivləşdiriləcək.
+
+                </div>
+
+            </div>
+
+
+            <!-- SETTINGS -->
+
+            <div class="page" id="settings">
+
+                <div class="page-title">
+
+                    <h1>Sayt ayarları</h1>
+
+                    <p>
+                        Biznes məlumatlarını idarə et.
+                    </p>
+
+                </div>
+
+                <div class="settings-box">
+
+                    <div class="form-group">
+
+                        <label>
+                            Biznes adı
+                        </label>
+
+                        <input
+                            id="businessName"
+                            value="VERDE DECOR"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            WhatsApp nömrəsi
+                        </label>
+
+                        <input
+                            id="whatsapp"
+                            value="994501234567"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Ünvan
+                        </label>
+
+                        <input
+                            id="address"
+                            value="Bakı, Azərbaycan"
+                        >
+
+                    </div>
+
+                    <button
+                        class="primary-btn"
+                        onclick="saveSettings()">
+                        Ayarları yadda saxla
+                    </button>
+
+                </div>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- PRODUCT MODAL -->
+
+<div class="modal-bg" id="productModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">
+                Yeni məhsul
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeProductModal()">
+                ×
+            </button>
+
+        </div>
+
+        <input
+            type="hidden"
+            id="editId"
+        >
+
+        <div class="form-group">
+
+            <label>
+                Məhsul şəkli
+            </label>
+
+            <input
+                id="productImage"
+                type="file"
+                accept="image/*"
+                onchange="previewImage(event)"
+            >
+
+        </div>
+
+        <img
+            id="imagePreview"
+            class="image-preview"
+        >
+
+        <div class="form-group">
+
+            <label>
+                Məhsul adı
+            </label>
+
+            <input
+                id="productName"
+                placeholder="Məsələn: Zeytun ağacı"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Kateqoriya
+            </label>
+
+            <select id="productCategory">
+
+                <option value="tree">
+                    Süni ağac
+                </option>
+
+                <option value="flower">
+                    Gül
+                </option>
+
+                <option value="wall">
+                    Yaşıl divar
+                </option>
+
+                <option value="pot">
+                    Dibçək
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Qiymət
+            </label>
+
+            <input
+                id="productPrice"
+                placeholder="Məsələn: 120 AZN"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Təsvir
+            </label>
+
+            <textarea
+                id="productDescription"
+                placeholder="Məhsul haqqında qısa məlumat..."
+            ></textarea>
+
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                class="cancel-btn"
+                onclick="closeProductModal()">
+                Ləğv et
+            </button>
+
+            <button
+                class="save-btn"
+                onclick="saveProduct()">
+                Yadda saxla
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let products =
+    JSON.parse(
+        localStorage.getItem("verdeProducts")
+    ) || [];
+
+let imageData = "";
+
+
+/* LOGIN */
+
+function login(){
+
+    const username =
+        document.getElementById("username").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    /*
+        DEMO LOGIN
+
+        Sonrakı mərhələdə real
+        təhlükəsiz authentication
+        sistemi ilə dəyişdiriləcək.
+    */
+
+    if(
+        username === "admin" &&
+        password === "1234"
+    ){
+
+        localStorage.setItem(
+            "verdeLoggedIn",
+            "true"
+        );
+
+        showAdmin();
+
+    }
+    else{
+
+        document
+            .getElementById("loginError")
+            .classList.remove("hidden");
+
+    }
+
+}
+
+
+function showAdmin(){
+
+    document
+        .getElementById("loginScreen")
+        .classList.add("hidden");
+
+    document
+        .getElementById("adminPanel")
+        .classList.remove("hidden");
+
+    renderProducts();
+
+}
+
+
+function logout(){
+
+    localStorage.removeItem(
+        "verdeLoggedIn"
+    );
+
+    location.reload();
+
+}
+
+
+if(
+    localStorage.getItem("verdeLoggedIn")
+    === "true"
+){
+
+    showAdmin();
+
+}
+
+
+/* NAVIGATION */
+
+function showPage(pageId,button){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(function(page){
+
+            page.classList.remove("active");
+
+        });
+
+    document
+        .getElementById(pageId)
+        .classList.add("active");
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(function(btn){
+
+            btn.classList.remove("active");
+
+        });
+
+    button.classList.add("active");
+
+}
+
+
+/* PRODUCTS */
+
+function renderProducts(){
+
+    const container =
+        document.getElementById("productsList");
+
+    container.innerHTML = "";
+
+    document
+        .getElementById("productCount")
+        .textContent = products.length;
+
+    if(products.length === 0){
+
+        container.innerHTML = `
+            <div class="empty">
+                📦<br><br>
+                Hələ məhsul yoxdur.<br><br>
+                "Yeni məhsul" düyməsinə bas.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    products.forEach(function(product){
+
+        const card =
+            document.createElement("div");
+
+        card.className = "product-card";
+
+        card.innerHTML = `
+
+            <img
+                src="${product.image || 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=900&q=80'}"
+                alt="${product.name}"
+            >
+
+            <div class="product-info">
+
+                <h3>
+                    ${product.name}
+                </h3>
+
+                <div class="product-category">
+                    ${categoryName(product.category)}
+                </div>
+
+                <div class="product-price">
+                    ${product.price || "Qiymət soruş"}
+                </div>
+
+                <div class="card-actions">
+
+                    <button
+                        class="edit-btn"
+                        onclick="editProduct(${product.id})">
+                        ✏️ Redaktə
+                    </button>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteProduct(${product.id})">
+                        🗑️ Sil
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+function categoryName(category){
+
+    const names = {
+
+        tree:"Süni ağac",
+
+        flower:"Gül",
+
+        wall:"Yaşıl divar",
+
+        pot:"Dibçək"
+
+    };
+
+    return names[category] || category;
+
+}
+
+
+/* MODAL */
+
+function openProductModal(){
+
+    document
+        .getElementById("modalTitle")
+        .textContent = "Yeni məhsul";
+
+    document
+        .getElementById("editId")
+        .value = "";
+
+    document
+        .getElementById("productName")
+        .value = "";
+
+    document
+        .getElementById("productCategory")
+        .value = "tree";
+
+    document
+        .getElementById("productPrice")
+        .value = "";
+
+    document
+        .getElementById("productDescription")
+        .value = "";
+
+    document
+        .getElementById("productImage")
+        .value = "";
+
+    imageData = "";
+
+    document
+        .getElementById("imagePreview")
+        .style.display = "none";
+
+    document
+        .getElementById("productModal")
+        .classList.add("show");
+
+}
+
+
+function closeProductModal(){
+
+    document
+        .getElementById("productModal")
+        .classList.remove("show");
+
+}
+
+
+/* IMAGE */
+
+function previewImage(event){
+
+    const file =
+        event.target.files[0];
+
+    if(!file){
+        return;
+    }
+
+    const reader =
+        new FileReader();
+
+    reader.onload = function(e){
+
+        imageData = e.target.result;
+
+        const preview =
+            document.getElementById("imagePreview");
+
+        preview.src = imageData;
+
+        preview.style.display = "block";
+
+    };
+
+    reader.readAsDataURL(file);
+
+}
+
+
+/* SAVE */
+
+function saveProduct(){
+
+    const name =
+        document
+            .getElementById("productName")
+            .value
+            .trim();
+
+    const category =
+        document
+            .getElementById("productCategory")
+            .value;
+
+    const price =
+        document
+            .getElementById("productPrice")
+            .value
+            .trim();
+
+    const description =
+        document
+            .getElementById("productDescription")
+            .value
+            .trim();
+
+    const editId =
+        document
+            .getElementById("editId")
+            .value;
+
+    if(!name){
+
+        alert("Məhsul adını yaz.");
+
+        return;
+
+    }
+
+
+    if(editId){
+
+        const product =
+            products.find(
+                p => p.id === Number(editId)
+            );
+
+        product.name = name;
+        product.category = category;
+        product.price = price;
+        product.description = description;
+
+        if(imageData){
+            product.image = imageData;
+        }
+
+    }
+    else{
+
+        const newProduct = {
+
+            id:Date.now(),
+
+            name:name,
+
+            category:category,
+
+            price:price,
+
+            description:description,
+
+            image:imageData
+
+        };
+
+        products.push(newProduct);
+
+    }
+
+
+    localStorage.setItem(
+        "verdeProducts",
+        JSON.stringify(products)
+    );
+
+    renderProducts();
+
+    closeProductModal();
+
+}
+
+
+function editProduct(id){
+
+    const product =
+        products.find(
+            p => p.id === id
+        );
+
+    if(!product){
+        return;
+    }
+
+    document
+        .getElementById("modalTitle")
+        .textContent = "Məhsulu redaktə et";
+
+    document
+        .getElementById("editId")
+        .value = product.id;
+
+    document
+        .getElementById("productName")
+        .value = product.name;
+
+    document
+        .getElementById("productCategory")
+        .value = product.category;
+
+    document
+        .getElementById("productPrice")
+        .value = product.price;
+
+    document
+        .getElementById("productDescription")
+        .value =
+        product.description || "";
+
+    imageData = product.image || "";
+
+    const preview =
+        document.getElementById("imagePreview");
+
+    if(imageData){
+
+        preview.src = imageData;
+
+        preview.style.display = "block";
+
+    }
+    else{
+
+        preview.style.display = "none";
+
+    }
+
+    document
+        .getElementById("productModal")
+        .classList.add("show");
+
+}
+
+
+function deleteProduct(id){
+
+    const confirmDelete =
+        confirm(
+            "Bu məhsulu silmək istəyirsən?"
+        );
+
+    if(!confirmDelete){
+        return;
+    }
+
+    products =
+        products.filter(
+            p => p.id !== id
+        );
+
+    localStorage.setItem(
+        "verdeProducts",
+        JSON.stringify(products)
+    );
+
+    renderProducts();
+
+}
+
+
+/* SETTINGS */
+
+function saveSettings(){
+
+    const settings = {
+
+        businessName:
+            document
+                .getElementById("businessName")
+                .value,
+
+        whatsapp:
+            document
+                .getElementById("whatsapp")
+                .value,
+
+        address:
+            document
+                .getElementById("address")
+                .value
+
+    };
+
+    localStorage.setItem(
+        "verdeSettings",
+        JSON.stringify(settings)
+    );
+
+    alert(
+        "Ayarlar yadda saxlanıldı."
+    );
+
+}
+
+</script>
+
+</body>
+          </html> 
