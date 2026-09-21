@@ -238,10 +238,11 @@ main{
 
 .preview{
   margin-top:12px;
-  max-width:180px;
-  max-height:180px;
+  width:180px;
+  height:180px;
   border-radius:12px;
-  object-fit:cover;
+  object-fit:contain;
+  background:#f1f4f1;
   display:none
 }
 
@@ -268,9 +269,116 @@ main{
   margin-bottom:18px
 }
 
-.portfolio-card img{
-  height:210px;
-  object-fit:cover
+/* PORTFOLIO */
+
+.portfolio-card{
+  position:relative
+}
+
+.portfolio-image-wrap{
+  width:100%;
+  height:240px;
+  background:#eef2ee;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden
+}
+
+.portfolio-image-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  cursor:pointer;
+  background:#eef2ee
+}
+
+.portfolio-image-error{
+  width:100%;
+  height:240px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:#eef2ee;
+  color:#718076;
+  text-align:center;
+  padding:15px
+}
+
+.image-link{
+  display:block;
+  text-align:center;
+  margin-top:9px;
+  color:#285b35;
+  font-weight:700;
+  text-decoration:none;
+  background:#edf3ee;
+  padding:9px;
+  border-radius:8px
+}
+
+/* IMAGE MODAL */
+
+.image-modal{
+  position:fixed;
+  inset:0;
+  background:#000b;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:9999
+}
+
+.image-modal.show{
+  display:flex
+}
+
+.image-modal-content{
+  width:min(950px,100%);
+  max-height:90vh;
+  background:white;
+  border-radius:18px;
+  padding:15px;
+  position:relative;
+  overflow:auto
+}
+
+.image-modal-content img{
+  width:100%;
+  max-height:70vh;
+  object-fit:contain;
+  display:block;
+  background:#f1f4f1;
+  border-radius:12px
+}
+
+.image-modal-title{
+  font-size:20px;
+  font-weight:800;
+  margin:13px 0 5px
+}
+
+.image-modal-description{
+  color:#718076;
+  margin:0
+}
+
+.modal-close{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:42px;
+  height:42px;
+  border:0;
+  border-radius:50%;
+  background:#183b23;
+  color:white;
+  font-size:22px;
+  z-index:2
 }
 
 @media(max-width:700px){
@@ -300,18 +408,23 @@ main{
     margin-bottom:14px
   }
 
-  .portfolio-card img{
-    height:220px
+  .portfolio-image-wrap{
+    height:240px
+  }
+
+  .image-modal{
+    padding:10px
+  }
+
+  .image-modal-content{
+    border-radius:14px;
+    padding:10px
   }
 }
 </style>
 </head>
 
 <body>
-
-<!-- =====================================================
-     LOGIN
-     ===================================================== -->
 
 <section class="login" id="loginScreen">
 
@@ -344,9 +457,7 @@ main{
     <button
       class="btn full"
       id="loginBtn">
-
       Daxil ol
-
     </button>
 
     <div
@@ -358,10 +469,6 @@ main{
 
 </section>
 
-
-<!-- =====================================================
-     APP
-     ===================================================== -->
 
 <section
   class="app"
@@ -376,9 +483,7 @@ main{
     <button
       class="logout"
       id="logoutBtn">
-
       Çıxış
-
     </button>
 
   </header>
@@ -386,53 +491,36 @@ main{
 
   <main>
 
-    <!-- =================================================
-         TABS
-         ================================================= -->
-
     <div class="tabs">
 
       <button
         class="tab active"
         data-page="productsPage">
-
         Məhsullar
-
       </button>
-
 
       <button
         class="tab"
         data-page="addPage">
-
         Məhsul əlavə et
-
       </button>
-
 
       <button
         class="tab"
         data-page="portfolioPage">
-
         Nümunələr
-
       </button>
-
 
       <button
         class="tab"
         data-page="portfolioAddPage">
-
         Nümunə əlavə et
-
       </button>
 
     </div>
 
 
-    <!-- =================================================
-         PRODUCTS
-         ================================================= -->
+    <!-- PRODUCTS -->
 
     <section id="productsPage">
 
@@ -457,9 +545,7 @@ main{
     </section>
 
 
-    <!-- =================================================
-         PRODUCT ADD / EDIT
-         ================================================= -->
+    <!-- PRODUCT ADD -->
 
     <section
       id="addPage"
@@ -482,7 +568,6 @@ main{
             required
             placeholder="Məsələn: Zeytun ağacı"
           >
-
 
           <label>
             Kateqoriya
@@ -510,7 +595,6 @@ main{
 
           </select>
 
-
           <label>
             Qiymət
           </label>
@@ -523,7 +607,6 @@ main{
             placeholder="0"
           >
 
-
           <label>
             Təsvir
           </label>
@@ -531,7 +614,6 @@ main{
           <textarea
             id="productDescription"
             placeholder="Məhsul haqqında qısa məlumat"></textarea>
-
 
           <label>
             Şəkil
@@ -543,13 +625,11 @@ main{
             accept="image/*"
           >
 
-
           <img
             id="preview"
             class="preview"
             alt="Şəkil önizləməsi"
           >
-
 
           <div class="actions">
 
@@ -557,23 +637,17 @@ main{
               type="submit"
               class="btn"
               id="saveBtn">
-
               Məhsulu yadda saxla
-
             </button>
-
 
             <button
               type="button"
               class="btn secondary"
               id="cancelBtn">
-
               Ləğv et
-
             </button>
 
           </div>
-
 
           <div
             class="status"
@@ -587,9 +661,7 @@ main{
     </section>
 
 
-    <!-- =================================================
-         PORTFOLIO LIST
-         ================================================= -->
+    <!-- PORTFOLIO LIST -->
 
     <section
       id="portfolioPage"
@@ -620,9 +692,7 @@ main{
     </section>
 
 
-    <!-- =================================================
-         PORTFOLIO ADD / EDIT
-         ================================================= -->
+    <!-- PORTFOLIO ADD -->
 
     <section
       id="portfolioAddPage"
@@ -638,7 +708,6 @@ main{
           Müştərilərə göstərmək istədiyin işin şəklini və məlumatını əlavə et.
         </p>
 
-
         <form id="portfolioForm">
 
           <label>
@@ -651,7 +720,6 @@ main{
             placeholder="Məsələn: Restoran üçün yaşıl divar"
           >
 
-
           <label>
             Təsvir
           </label>
@@ -659,7 +727,6 @@ main{
           <textarea
             id="portfolioDescription"
             placeholder="Layihə haqqında qısa məlumat"></textarea>
-
 
           <label>
             Şəkil
@@ -671,13 +738,11 @@ main{
             accept="image/*"
           >
 
-
           <img
             id="portfolioPreview"
             class="preview"
             alt="Nümunə şəkli önizləməsi"
           >
-
 
           <div class="actions">
 
@@ -685,23 +750,17 @@ main{
               type="submit"
               class="btn"
               id="portfolioSaveBtn">
-
               Nümunəni yadda saxla
-
             </button>
-
 
             <button
               type="button"
               class="btn secondary"
               id="portfolioCancelBtn">
-
               Ləğv et
-
             </button>
 
           </div>
-
 
           <div
             class="status"
@@ -717,6 +776,41 @@ main{
   </main>
 
 </section>
+
+
+<!-- IMAGE MODAL -->
+
+<div
+  class="image-modal"
+  id="imageModal">
+
+  <div class="image-modal-content">
+
+    <button
+      type="button"
+      class="modal-close"
+      id="modalClose">
+      ×
+    </button>
+
+    <img
+      id="modalImage"
+      alt="Nümunə şəkli"
+    >
+
+    <div
+      class="image-modal-title"
+      id="modalTitle">
+    </div>
+
+    <p
+      class="image-modal-description"
+      id="modalDescription">
+    </p>
+
+  </div>
+
+</div>
 
 
 <script>
@@ -792,7 +886,6 @@ const formStatus =
 const formTitle =
   document.getElementById("formTitle");
 
-
 const portfolioList =
   document.getElementById("portfolioList");
 
@@ -817,9 +910,21 @@ const portfolioFormStatus =
 const portfolioFormTitle =
   document.getElementById("portfolioFormTitle");
 
+const imageModal =
+  document.getElementById("imageModal");
+
+const modalImage =
+  document.getElementById("modalImage");
+
+const modalTitle =
+  document.getElementById("modalTitle");
+
+const modalDescription =
+  document.getElementById("modalDescription");
+
 
 /* =====================================================
-   STATUS HELPERS
+   STATUS
    ===================================================== */
 
 function showStatus(
@@ -844,6 +949,7 @@ function clearStatus(element){
 
   element.style.display =
     "none";
+
 }
 
 
@@ -860,7 +966,6 @@ function showApp(){
     "block";
 
   loadProducts();
-
   loadPortfolio();
 
 }
@@ -923,7 +1028,6 @@ document
           .getElementById("password")
           .value;
 
-
       if(!email || !password){
 
         loginError.textContent =
@@ -936,15 +1040,11 @@ document
 
       }
 
-
       const {error} =
         await client.auth.signInWithPassword({
-
           email,
           password
-
         });
-
 
       if(error){
 
@@ -957,7 +1057,6 @@ document
         return;
 
       }
-
 
       showApp();
 
@@ -994,11 +1093,9 @@ document
     tab.addEventListener(
       "click",
       ()=>{
-
         openPage(
           tab.dataset.page
         );
-
       }
     );
 
@@ -1034,12 +1131,10 @@ function openPage(page){
 
 
   const pages = [
-
     "productsPage",
     "addPage",
     "portfolioPage",
     "portfolioAddPage"
-
   ];
 
 
@@ -1071,7 +1166,7 @@ function openPage(page){
 
 
 /* =====================================================
-   PRODUCT IMAGE PREVIEW
+   PRODUCT PREVIEW
    ===================================================== */
 
 productImage.addEventListener(
@@ -1080,7 +1175,6 @@ productImage.addEventListener(
 
     const file =
       productImage.files[0];
-
 
     if(!file){
 
@@ -1127,7 +1221,7 @@ productImage.addEventListener(
 
 
 /* =====================================================
-   PORTFOLIO IMAGE PREVIEW
+   PORTFOLIO PREVIEW
    ===================================================== */
 
 portfolioImage.addEventListener(
@@ -1136,7 +1230,6 @@ portfolioImage.addEventListener(
 
     const file =
       portfolioImage.files[0];
-
 
     if(!file){
 
@@ -1208,9 +1301,7 @@ async function loadProducts(){
 
     productsList.innerHTML =
       '<div class="empty">Xəta: ' +
-      escapeHtml(
-        error.message
-      ) +
+      escapeHtml(error.message) +
       '</div>';
 
     return;
@@ -1229,137 +1320,114 @@ async function loadProducts(){
 
 
   productsList.innerHTML =
-    data
-      .map(product=>{
+    data.map(product=>{
 
-        const image =
-          product.image_url
+      const image =
+        product.image_url
+          ? `
+            <img
+              src="${escapeAttr(product.image_url)}"
+              alt="${escapeAttr(product.name)}"
+              loading="lazy"
+            >
+          `
+          : `
+            <div
+              style="
+                height:180px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                background:#edf1ed;
+                font-size:50px
+              ">
+              🌿
+            </div>
+          `;
 
-            ? `
-              <img
-                src="${escapeAttr(
-                  product.image_url
-                )}"
-                alt="${escapeAttr(
-                  product.name
-                )}"
-              >
-              `
 
-            : `
-              <div
+      return `
+        <article class="card">
+
+          ${image}
+
+          <div class="card-body">
+
+            <h3>
+              ${escapeHtml(product.name)}
+            </h3>
+
+            <div class="muted">
+              ${escapeHtml(
+                categoryName(product.category)
+              )}
+            </div>
+
+            <p class="price">
+              ${Number(
+                product.price || 0
+              ).toFixed(2)}
+              AZN
+            </p>
+
+            <p>
+              ${escapeHtml(
+                product.description || ""
+              )}
+            </p>
+
+            <div class="actions">
+
+              <button
                 style="
-                  height:180px;
-                  display:flex;
-                  align-items:center;
-                  justify-content:center;
-                  background:#edf1ed;
-                  font-size:50px
-                ">
-                🌿
-              </div>
-              `;
+                  background:#e9eee9;
+                  color:#285b35
+                "
+                onclick="editProduct('${product.id}')">
+                Redaktə
+              </button>
 
-
-        return `
-          <article class="card">
-
-            ${image}
-
-            <div class="card-body">
-
-              <h3>
-                ${escapeHtml(
-                  product.name
-                )}
-              </h3>
-
-              <div class="muted">
-                ${escapeHtml(
-                  categoryName(
-                    product.category
-                  )
-                )}
-              </div>
-
-              <p class="price">
-                ${Number(
-                  product.price || 0
-                ).toFixed(2)}
-                AZN
-              </p>
-
-              <p>
-                ${escapeHtml(
-                  product.description || ""
-                )}
-              </p>
-
-              <div class="actions">
-
-                <button
-                  style="
-                    background:#e9eee9;
-                    color:#285b35
-                  "
-                  onclick="editProduct('${product.id}')">
-
-                  Redaktə
-
-                </button>
-
-
-                <button
-                  style="
-                    background:#ffe9e9;
-                    color:#a22
-                  "
-                  onclick="deleteProduct('${product.id}')">
-
-                  Sil
-
-                </button>
-
-              </div>
+              <button
+                style="
+                  background:#ffe9e9;
+                  color:#a22
+                "
+                onclick="deleteProduct('${product.id}')">
+                Sil
+              </button>
 
             </div>
 
-          </article>
-        `;
+          </div>
 
-      })
-      .join("");
+        </article>
+      `;
+
+    }).join("");
 
 }
 
 
 /* =====================================================
-   CATEGORY NAME
+   CATEGORY
    ===================================================== */
 
 function categoryName(category){
 
   const names = {
-
     tree:"Süni ağaclar",
-
     flower:"Güllər / Kompozisiya",
-
     wall:"Yaşıl divar",
-
     pot:"Dibçək"
-
   };
 
-
-  return names[category] ||
-    category;
+  return names[category] || category;
 
 }
 
 
 /* =====================================================
-   UPLOAD IMAGE
+   UPLOAD
    ===================================================== */
 
 async function uploadImage(
@@ -1395,9 +1463,7 @@ async function uploadImage(
       "webp",
       "gif"
     ].includes(extension)
-
       ? extension
-
       : "jpg";
 
 
@@ -1442,13 +1508,22 @@ async function uploadImage(
       .getPublicUrl(path);
 
 
+  if(!data || !data.publicUrl){
+
+    throw new Error(
+      "Şəkilin public URL-i alınmadı."
+    );
+
+  }
+
+
   return data.publicUrl;
 
 }
 
 
 /* =====================================================
-   GET STORAGE PATH
+   STORAGE PATH
    ===================================================== */
 
 function getStoragePathFromUrl(url){
@@ -1526,7 +1601,7 @@ async function deleteImageFromStorage(url){
 
 
 /* =====================================================
-   SAVE / UPDATE PRODUCT
+   SAVE PRODUCT
    ===================================================== */
 
 productForm.addEventListener(
@@ -1535,9 +1610,7 @@ productForm.addEventListener(
 
     e.preventDefault();
 
-    clearStatus(
-      formStatus
-    );
+    clearStatus(formStatus);
 
 
     const saveBtn =
@@ -1554,9 +1627,7 @@ productForm.addEventListener(
 
 
     let newImageUrl = "";
-
-    let newImageUploaded =
-      false;
+    let newImageUploaded = false;
 
 
     try{
@@ -1618,8 +1689,6 @@ productForm.addEventListener(
       let result;
 
 
-      /* UPDATE */
-
       if(editingId){
 
         result =
@@ -1642,8 +1711,7 @@ productForm.addEventListener(
         if(
           file &&
           oldImageUrl &&
-          oldImageUrl !==
-            newImageUrl
+          oldImageUrl !== newImageUrl
         ){
 
           try{
@@ -1668,12 +1736,7 @@ productForm.addEventListener(
           "Məhsul yeniləndi. ✅"
         );
 
-      }
-
-
-      /* INSERT */
-
-      else{
+      }else{
 
         result =
           await client
@@ -1766,10 +1829,7 @@ window.editProduct =
 
     if(error){
 
-      alert(
-        error.message
-      );
-
+      alert(error.message);
       return;
 
     }
@@ -1785,19 +1845,14 @@ window.editProduct =
     productName.value =
       data.name || "";
 
-
     productCategory.value =
-      data.category ||
-      "tree";
-
+      data.category || "tree";
 
     productPrice.value =
       data.price || 0;
 
-
     productDescription.value =
       data.description || "";
-
 
     productImage.value =
       "";
@@ -1852,22 +1907,14 @@ window.deleteProduct =
     } =
       await client
         .from("products")
-        .select(
-          "id,image_url"
-        )
-        .eq(
-          "id",
-          id
-        )
+        .select("id,image_url")
+        .eq("id",id)
         .single();
 
 
     if(findError){
 
-      alert(
-        findError.message
-      );
-
+      alert(findError.message);
       return;
 
     }
@@ -1877,27 +1924,18 @@ window.deleteProduct =
       await client
         .from("products")
         .delete()
-        .eq(
-          "id",
-          id
-        );
+        .eq("id",id);
 
 
     if(error){
 
-      alert(
-        error.message
-      );
-
+      alert(error.message);
       return;
 
     }
 
 
-    if(
-      product &&
-      product.image_url
-    ){
+    if(product && product.image_url){
 
       try{
 
@@ -1923,13 +1961,11 @@ window.deleteProduct =
 
 
 /* =====================================================
-   RESET PRODUCT FORM
+   RESET PRODUCT
    ===================================================== */
 
 document
-  .getElementById(
-    "cancelBtn"
-  )
+  .getElementById("cancelBtn")
   .addEventListener(
     "click",
     resetForm
@@ -1944,9 +1980,7 @@ function resetForm(){
   oldImageUrl =
     "";
 
-
   productForm.reset();
-
 
   preview.src =
     "";
@@ -1954,10 +1988,8 @@ function resetForm(){
   preview.style.display =
     "none";
 
-
   formTitle.textContent =
     "Yeni məhsul";
-
 
   clearStatus(
     formStatus
@@ -1992,9 +2024,7 @@ async function loadPortfolio(){
 
     portfolioList.innerHTML =
       '<div class="empty">Xəta: ' +
-      escapeHtml(
-        error.message
-      ) +
+      escapeHtml(error.message) +
       '</div>';
 
     return;
@@ -2002,17 +2032,16 @@ async function loadPortfolio(){
   }
 
 
-  if(
-    !data ||
-    data.length === 0
-  ){
+  if(!data || data.length === 0){
 
     portfolioList.innerHTML =
-      '<div class="empty">' +
-      'Hələ nümunə layihəsi yoxdur.' +
-      '<br><br>' +
-      'Yuxarıdan "Nümunə əlavə et" bölməsinə keç.' +
-      '</div>';
+      `
+      <div class="empty">
+        Hələ nümunə layihəsi yoxdur.
+        <br><br>
+        Yuxarıdan "Nümunə əlavə et" bölməsinə keç.
+      </div>
+      `;
 
     return;
 
@@ -2020,96 +2049,248 @@ async function loadPortfolio(){
 
 
   portfolioList.innerHTML =
-    data
-      .map(item=>{
+    data.map(item=>{
 
-        const image =
-          item.image_url
+      const safeUrl =
+        item.image_url
+          ? escapeAttr(item.image_url)
+          : "";
 
-            ? `
-              <img
-                src="${escapeAttr(
-                  item.image_url
-                )}"
-                alt="${escapeAttr(
-                  item.title
-                )}"
-              >
-              `
 
-            : `
-              <div
+      let imageBlock;
+
+
+      if(item.image_url){
+
+        imageBlock = `
+          <div class="portfolio-image-wrap">
+
+            <img
+              src="${safeUrl}"
+              alt="${escapeAttr(item.title || "Nümunə")}"
+              loading="lazy"
+              onclick="openPortfolioImage(
+                '${escapeJs(item.image_url)}',
+                '${escapeJs(item.title || "")}',
+                '${escapeJs(item.description || "")}'
+              )"
+              onerror="portfolioImageError(this)"
+            >
+
+          </div>
+
+          <a
+            class="image-link"
+            href="${safeUrl}"
+            target="_blank"
+            rel="noopener noreferrer">
+
+            🖼️ Şəkilə bax
+
+          </a>
+        `;
+
+      }else{
+
+        imageBlock = `
+          <div class="portfolio-image-error">
+
+            <div style="font-size:45px">
+              🌿
+            </div>
+
+            <strong>
+              Şəkil yoxdur
+            </strong>
+
+          </div>
+        `;
+
+      }
+
+
+      return `
+        <article
+          class="card portfolio-card">
+
+          ${imageBlock}
+
+          <div class="card-body">
+
+            <h3>
+              ${escapeHtml(
+                item.title || "Adsız layihə"
+              )}
+            </h3>
+
+            <p>
+              ${escapeHtml(
+                item.description || ""
+              )}
+            </p>
+
+            <div class="actions">
+
+              <button
                 style="
-                  height:210px;
-                  display:flex;
-                  align-items:center;
-                  justify-content:center;
-                  background:#edf1ed;
-                  font-size:50px
-                ">
-                🌿
-              </div>
-              `;
+                  background:#e9eee9;
+                  color:#285b35
+                "
+                onclick="editPortfolio('${item.id}')">
 
+                Redaktə
 
-        return `
-          <article
-            class="card portfolio-card">
+              </button>
 
-            ${image}
+              <button
+                style="
+                  background:#ffe9e9;
+                  color:#a22
+                "
+                onclick="deletePortfolio('${item.id}')">
 
-            <div class="card-body">
+                Sil
 
-              <h3>
-                ${escapeHtml(
-                  item.title
-                )}
-              </h3>
-
-
-              <p>
-                ${escapeHtml(
-                  item.description || ""
-                )}
-              </p>
-
-
-              <div class="actions">
-
-                <button
-                  style="
-                    background:#e9eee9;
-                    color:#285b35
-                  "
-                  onclick="editPortfolio('${item.id}')">
-
-                  Redaktə
-
-                </button>
-
-
-                <button
-                  style="
-                    background:#ffe9e9;
-                    color:#a22
-                  "
-                  onclick="deletePortfolio('${item.id}')">
-
-                  Sil
-
-                </button>
-
-              </div>
+              </button>
 
             </div>
 
-          </article>
-        `;
+          </div>
 
-      })
-      .join("");
+        </article>
+      `;
+
+    }).join("");
 
 }
+
+
+/* =====================================================
+   PORTFOLIO IMAGE ERROR
+   ===================================================== */
+
+window.portfolioImageError =
+  function(img){
+
+    const wrapper =
+      img.parentElement;
+
+
+    if(!wrapper){
+
+      return;
+
+    }
+
+
+    wrapper.innerHTML = `
+      <div class="portfolio-image-error">
+
+        <div style="font-size:42px">
+          ⚠️
+        </div>
+
+        <strong>
+          Şəkil yüklənmədi
+        </strong>
+
+        <span style="font-size:13px">
+          Storage URL-i yoxlanmalıdır
+        </span>
+
+      </div>
+    `;
+
+  };
+
+
+/* =====================================================
+   OPEN PORTFOLIO IMAGE
+   ===================================================== */
+
+window.openPortfolioImage =
+  function(
+    url,
+    title,
+    description
+  ){
+
+    if(!url){
+
+      return;
+
+    }
+
+
+    modalImage.src =
+      url;
+
+    modalImage.alt =
+      title || "Nümunə şəkli";
+
+    modalTitle.textContent =
+      title || "";
+
+    modalDescription.textContent =
+      description || "";
+
+    imageModal.classList.add(
+      "show"
+    );
+
+  };
+
+
+/* =====================================================
+   CLOSE MODAL
+   ===================================================== */
+
+function closeImageModal(){
+
+  imageModal.classList.remove(
+    "show"
+  );
+
+  modalImage.src =
+    "";
+
+}
+
+
+document
+  .getElementById("modalClose")
+  .addEventListener(
+    "click",
+    closeImageModal
+  );
+
+
+imageModal.addEventListener(
+  "click",
+  e=>{
+
+    if(e.target === imageModal){
+
+      closeImageModal();
+
+    }
+
+  }
+);
+
+
+document.addEventListener(
+  "keydown",
+  e=>{
+
+    if(e.key === "Escape"){
+
+      closeImageModal();
+
+    }
+
+  }
+);
 
 
 /* =====================================================
@@ -2141,9 +2322,7 @@ portfolioForm.addEventListener(
 
 
     let newImageUrl = "";
-
-    let newImageUploaded =
-      false;
+    let newImageUploaded = false;
 
 
     try{
@@ -2166,8 +2345,7 @@ portfolioForm.addEventListener(
       }else{
 
         newImageUrl =
-          oldPortfolioImageUrl ||
-          "";
+          oldPortfolioImageUrl || "";
 
       }
 
@@ -2195,9 +2373,7 @@ portfolioForm.addEventListener(
       }
 
 
-      if(
-        !payload.image_url
-      ){
+      if(!payload.image_url){
 
         throw new Error(
           "Nümunə üçün şəkil seç."
@@ -2208,8 +2384,6 @@ portfolioForm.addEventListener(
 
       let result;
 
-
-      /* UPDATE */
 
       if(editingPortfolioId){
 
@@ -2259,12 +2433,7 @@ portfolioForm.addEventListener(
           "Nümunə yeniləndi. ✅"
         );
 
-      }
-
-
-      /* INSERT */
-
-      else{
+      }else{
 
         result =
           await client
@@ -2357,10 +2526,7 @@ window.editPortfolio =
 
     if(error){
 
-      alert(
-        error.message
-      );
-
+      alert(error.message);
       return;
 
     }
@@ -2376,10 +2542,8 @@ window.editPortfolio =
     portfolioTitle.value =
       data.title || "";
 
-
     portfolioDescription.value =
       data.description || "";
-
 
     portfolioImage.value =
       "";
@@ -2446,10 +2610,7 @@ window.deletePortfolio =
 
     if(findError){
 
-      alert(
-        findError.message
-      );
-
+      alert(findError.message);
       return;
 
     }
@@ -2467,19 +2628,13 @@ window.deletePortfolio =
 
     if(error){
 
-      alert(
-        error.message
-      );
-
+      alert(error.message);
       return;
 
     }
 
 
-    if(
-      item &&
-      item.image_url
-    ){
+    if(item && item.image_url){
 
       try{
 
@@ -2505,7 +2660,7 @@ window.deletePortfolio =
 
 
 /* =====================================================
-   CANCEL / RESET PORTFOLIO
+   RESET PORTFOLIO
    ===================================================== */
 
 document
@@ -2526,9 +2681,7 @@ function resetPortfolioForm(){
   oldPortfolioImageUrl =
     "";
 
-
   portfolioForm.reset();
-
 
   portfolioPreview.src =
     "";
@@ -2536,10 +2689,8 @@ function resetPortfolioForm(){
   portfolioPreview.style.display =
     "none";
 
-
   portfolioFormTitle.textContent =
     "Yeni nümunə";
-
 
   clearStatus(
     portfolioFormStatus
@@ -2557,46 +2708,41 @@ function escapeHtml(value){
   return String(
     value ?? ""
   )
-
-    .replaceAll(
-      "&",
-      "&amp;"
-    )
-
-    .replaceAll(
-      "<",
-      "&lt;"
-    )
-
-    .replaceAll(
-      ">",
-      "&gt;"
-    )
-
-    .replaceAll(
-      '"',
-      "&quot;"
-    )
-
-    .replaceAll(
-      "'",
-      "&#039;"
-    );
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
 
 function escapeAttr(value){
 
-  return escapeHtml(
-    value
-  );
+  return escapeHtml(value);
 
 }
 
 
 /* =====================================================
-   AUTH STATE
+   JS STRING ESCAPE
+   ===================================================== */
+
+function escapeJs(value){
+
+  return String(
+    value ?? ""
+  )
+    .replaceAll("\\","\\\\")
+    .replaceAll("'","\\'")
+    .replaceAll("\n"," ")
+    .replaceAll("\r"," ");
+
+}
+
+
+/* =====================================================
+   AUTH
    ===================================================== */
 
 client.auth.onAuthStateChange(
@@ -2621,4 +2767,4 @@ checkSession();
 </script>
 
 </body>
-</html> 
+  </html> 
